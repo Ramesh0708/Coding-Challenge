@@ -1,0 +1,39 @@
+from collections import Counter
+
+def check_permutation_exists(pattern, text):
+    pattern_count = Counter(pattern)
+    text_window_count = Counter(text[:len(pattern)])
+
+    for i in range(len(pattern), len(text)):
+        if pattern_count == text_window_count:
+            return "YES"
+        
+        # Remove the leftmost character from the window
+        if text_window_count[text[i-len(pattern)]] == 1:
+            del text_window_count[text[i-len(pattern)]]
+        else:
+            text_window_count[text[i-len(pattern)]] -= 1
+        
+        # Add the next character to the window
+        if text[i] not in text_window_count:
+            text_window_count[text[i]] = 1
+        else:
+            text_window_count[text[i]] += 1
+    
+    # Check for the last window
+    if pattern_count == text_window_count:
+        return "YES"
+    
+    return "NO"
+    
+# Reading input
+t = int(input())
+for _ in range(t):
+    pattern = input().strip()
+    text = input().strip()
+    print(check_permutation_exists(pattern, text))
+
+
+The above code uses the sliding window technique to check if any permutation of the pattern exists in the text string. We maintain two dictionaries - one for the pattern and one for the current window of the text string. We slide the window over the text string, updating the window dictionary and checking if it matches the pattern dictionary. If it matches, we return "YES". If we have checked all windows and haven't found a match, we return "NO".
+
+Note: The time complexity of the above solution is O(n), where n is the length of the text string.
